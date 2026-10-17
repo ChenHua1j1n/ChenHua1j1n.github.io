@@ -153,6 +153,22 @@ git clone --recursive git@github.com:ChenHua1j1n/ChenHua1j1n.github.io.git
 > 若改用 Netlify / Vercel：构建命令 `hugo --minify`，发布目录 `public`，环境变量 `HUGO_VERSION=0.168.0`。
 > PaperMod 的图片处理需要 **Hugo Extended** 版本。
 
+### 常见问题：推送成功后线上仍是旧页面
+
+**现象**：Actions 显示 success，但浏览器打开还是旧内容，或某些页面 404。
+
+**原因**：GitHub Pages 的 CDN 缓存，以及切换到 `gh-pages` 源后未自动重建。
+
+**处理**：以仓库 **Settings → Pages** 页面显示的 “Your site is live at ...” 为准，并可强制重建：
+
+```powershell
+# 需要 GitHub Token（含 repo 权限）
+curl -X POST -H "Authorization: Bearer <TOKEN>" `
+  https://api.github.com/repos/ChenHua1j1n/ChenHua1j1n.github.io/pages/builds
+```
+
+或在 **Actions** 中手动 Run workflow。通常 1–2 分钟内生效。
+
 ---
 
 ## 六、主题管理
