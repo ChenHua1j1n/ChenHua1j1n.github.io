@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # 我的博客（Hugo + PaperMod）
 
 Hugo Extended v0.168.0 ｜ PaperMod 主题 ｜ 简体中文
