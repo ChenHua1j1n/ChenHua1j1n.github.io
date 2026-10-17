@@ -1,0 +1,3 @@
+User-agent: *
+Disallow:
+Sitemap: https://ChenHua1j1n.github.io/sitemap.xml
