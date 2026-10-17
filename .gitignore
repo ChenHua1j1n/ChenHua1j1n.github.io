@@ -1,0 +1,14 @@
+# 构建输出
+public/
+resources/_gen/
+
+# Hugo 临时文件
+.hugo_build.lock
+
+# 系统/编辑器
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+
+# 若使用 Git Submodule 管理主题，保留 themes/papermod 的 git 元数据
