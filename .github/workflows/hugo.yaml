@@ -1,24 +1,22 @@
 name: Deploy Hugo site to GitHub Pages
 
 on:
-  # 推送到 main 分支时自动构建部署
+  # 推送到 main 分支时自动构建并发布
   push:
     branches: ["main"]
   # 允许在 Actions 页面手动触发
   workflow_dispatch:
 
-# 授予所需权限（GITHUB_TOKEN）
+# 需要写入 gh-pages 分支，同时用 GITHUB_TOKEN 完成认证
 permissions:
-  contents: read
-  pages: write
-  id-token: write
+  contents: write
 
-# 同一时间只允许一个部署；新的推送可打断排队中的旧任务
+# 同一时间只跑一个部署；新的推送可打断排队中的旧任务
 concurrency:
   group: "pages"
   cancel-in-progress: false
 
-# 构建时使用的 Hugo 版本（与本机 v0.168.0 保持一致，需 Extended 版）
+# 构建使用的 Hugo 版本（与本机 v0.168.0 一致，需 Extended）
 env:
   HUGO_VERSION: "0.168.0"
 
@@ -27,16 +25,17 @@ defaults:
     shell: bash
 
 jobs:
-  # ---------- 1. 构建 ----------
-  build:
+  build-deploy:
     runs-on: ubuntu-latest
     steps:
+      # 1) 检出源码，并递归拉取主题 submodule
       - name: 检出源码（含主题 submodule）
         uses: actions/checkout@v4
         with:
           submodules: recursive
           fetch-depth: 0
 
+      # 2) 安装 Hugo Extended
       - name: 安装 Hugo Extended ${{ env.HUGO_VERSION }}
         run: |
           wget -q -O hugo.deb \
@@ -44,30 +43,18 @@ jobs:
           sudo dpkg -i hugo.deb
           hugo version
 
-      - name: 配置 GitHub Pages
-        id: pages
-        uses: actions/configure-pages@v5
-
+      # 3) 构建站点（baseURL 已写在 hugo.toml 中，指向根域名）
       - name: 构建站点
-        run: |
-          hugo \
-            --gc \
-            --minify \
-            --baseURL "${{ steps.pages.outputs.base_url }}/"
+        run: hugo --gc --minify
 
-      - name: 上传构建产物
-        uses: actions/upload-pages-artifact@v3
+      # 4) 发布 public/ 到 gh-pages 分支
+      - name: 发布到 gh-pages
+        uses: peaceiris/actions-gh-pages@v4
         with:
-          path: ./public
-
-  # ---------- 2. 部署 ----------
-  deploy:
-    needs: build
-    runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    steps:
-      - name: 部署到 GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_branch: gh-pages
+          publish_dir: ./public
+          # 保留自定义域名文件（若以后绑定自有域名）
+          cname: ""
+          # 提交信息
+          commit_message: "Deploy Hugo site: ${{ github.event.head_commit.message }}"

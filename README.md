@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # 我的博客（Hugo + PaperMod）
 
 Hugo Extended v0.168.0 ｜ PaperMod 主题 ｜ 简体中文
@@ -113,34 +114,45 @@ title = '我的博客'
 
 ---
 
-## 五、部署
+## 五、部署（已配置好，自动发布）
 
-### 方案 A：GitHub Pages（用户名.github.io）
+**线上地址：<https://ChenHua1j1n.github.io/>**
+
+| 项目 | 值 |
+| --- | --- |
+| 源码仓库 | `git@github.com:ChenHua1j1n/ChenHua1j1n.github.io.git`（`main` 分支） |
+| 发布分支 | `gh-pages`（由 Actions 自动生成，**请勿手动修改**） |
+| 工作流文件 | `.github/workflows/hugo.yaml` |
+| Pages 构建源 | 分支 `gh-pages` / 根目录 |
+
+### 日常发布流程
 
 ```powershell
-# 1. 生成静态文件
-hugo --minify
+cd E:\blog\myblog
+hugo server -D          # 先本地预览
 
-# 2. 将 public 内容推送到 <用户名>.github.io 仓库
-cd public
-git init -b main
 git add .
-git commit -m "deploy"
-git remote add origin git@github.com:<用户名>/<用户名>.github.io.git
-git push -u origin main
+git commit -m "写完了新文章"
+git push                # 推送后 ~1-2 分钟自动上线
 ```
 
-### 方案 B：GitHub Actions 自动部署（推荐）
+推送后可在仓库 **Actions** 标签页查看构建进度；成功即表示已发布。
 
-在仓库 `.github/workflows/deploy.yml` 添加官方工作流，推送即自动构建发布。
+### 手动重新发布
 
-### 方案 C：Netlify / Vercel
+仓库 → **Actions** → 左侧 `Deploy Hugo site to GitHub Pages` → 右侧 **Run workflow**。
 
-- 构建命令：`hugo --minify`
-- 发布目录：`public`
-- 环境变量：`HUGO_VERSION=0.168.0`
+### 首次克隆
 
-> 注意：PaperMod 使用 WebP 等图片处理，需 **Hugo Extended** 版本。
+```powershell
+git clone --recursive git@github.com:ChenHua1j1n/ChenHua1j1n.github.io.git
+```
+
+> ⚠️ 注意：本仓库 `main` 分支存放的是 **Hugo 源码**，不是静态站点。
+> 静态站点在 `gh-pages` 分支，GitHub Pages 直接读取它，无需任何手动上传。
+>
+> 若改用 Netlify / Vercel：构建命令 `hugo --minify`，发布目录 `public`，环境变量 `HUGO_VERSION=0.168.0`。
+> PaperMod 的图片处理需要 **Hugo Extended** 版本。
 
 ---
 
