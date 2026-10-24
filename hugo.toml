@@ -1,7 +1,7 @@
 baseURL = 'https://ChenHua1j1n.github.io/'
 locale = 'zh-CN'
 defaultContentLanguage = 'zh'
-title = '我的博客'
+title = "陈怀今 Chen Huaijin's blog"
 theme = 'papermod'
 
 # ============ 基础设置 ============
@@ -60,10 +60,16 @@ pagination.pagerSize = 10  # 每页文章数
   [params.profileMode]
     enabled = false          # 改为 true 可切换为个人主页式首页
 
-  # 顶部导航需要的社交图标
+  # 社交图标（首页简介下方 + 其他位置）
   [[params.socialIcons]]
     name = 'github'
-    url = 'https://github.com/'
+    title = 'GitHub'
+    url = 'https://github.com/ChenHua1j1n'
+
+  [[params.socialIcons]]
+    name = 'email'
+    title = 'Email'
+    url = 'mailto:dongcheen@outlook.com'
 
   # 文章页面的编辑链接（可选，默认为空不显示）
   # [params.editPost]
